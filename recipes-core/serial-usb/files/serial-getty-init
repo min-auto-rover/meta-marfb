@@ -1,0 +1,48 @@
+#!/bin/sh
+#
+# serial-getty   Start the serial-getty@ttyGS0 service
+#
+# chkconfig: 2345 20 80
+# description: Enable and start serial-getty@ttyGS0 service at boot
+
+. /etc/init.d/functions
+
+LOG_TAG="serial-getty-init"
+
+log_to_kernel() {
+    echo "<4>serial-getty-init: $1" > /dev/kmsg
+    #logger -t $LOG_TAG "Starting serial-getty@ttyGS0 service"
+}
+
+case "$1" in
+    start)
+	log_to_kernel "Starting serial-getty@ttyGS0 service"
+        #/sbin/start-stop-daemon --start --exec /sbin/getty -- -L ttyGS0 115200 vt100
+	#log_to_kernel "Started serial-getty@ttyGS0, return value is $?"
+        #su root -c "getty -L 115200 /dev/ttyGS0 vt100"
+	#log_to_kernel "Direct getty return value is $?"
+	echo "T0:23:respawn:/sbin/getty -L ttyGS0 115200 vt100" >> /etc/inittab
+	log_to_kernel "edit inittab value is $?"
+	init q
+	log_to_kernel "init reload value is $?"
+	ls -la /dev/tty* 1>&2 
+	ls -la /dev/tty* 2>&1 
+	;;
+    stop)
+	log_to_kernel "Stopping serial-getty@ttyGS0 service"
+        /sbin/start-stop-daemon --stop --exec /sbin/getty -- -L ttyGS0 115200 vt100
+	log_to_kernel "Stopped serial-getty@ttyGS0, return value is $?"
+        ;;
+    restart)
+        $0 stop
+        $0 start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+	log_to_kernel "Usage: $0 {start|stop|restart}"
+        exit 1
+        ;;
+esac
+
+exit 0
+
