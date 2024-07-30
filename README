@@ -1,41 +1,123 @@
-This README file contains information on the contents of the meta-marfb layer.
+This README file contains information on the contents of the
+meta-marfb layer.
 
 Please see the corresponding sections below for details.
 
 Dependencies
 ============
 
-  URI: <first dependency>
-  branch: <branch name>
+  URI: git://git.yoctoproject.org/poky 
+  branch: scarthgap
 
-  URI: <second dependency>
-  branch: <branch name>
+  URI: https://github.com/agherzan/meta-raspberrypi.git
+  branch: scarthgap
 
-  .
-  .
-  .
+  URI: https://github.com/openembedded/meta-openembedded.git
+  branch: scarthgap
 
 Patches
 =======
 
-Please submit any patches against the meta-marfb layer to the xxxx mailing list (xxxx@zzzz.org)
-and cc: the maintainer:
+Please submit any patches against the meta-marfb layer to the
+maintainers.
 
-Maintainer: XXX YYYYYY <xxx.yyyyyy@zzzzz.com>
+Maintainer: Qiyang Sun <qs2g22@soton.ac.uk>
+
+If you believe there is a security issue, please sign and encrypt the
+email. The maintainer's PGP Public Key, which is also used to sign
+commits, can be found at: <https://git.soton.ac.uk/qs2g22.gpg>. 
 
 Table of Contents
 =================
 
-  I. Adding the meta-marfb layer to your build
- II. Misc
+   I. Adding the meta-marfb layer to your build
+  II. Misc
+ III. Quick start guide
 
 
 I. Adding the meta-marfb layer to your build
-=================================================
+============================================
 
 Run 'bitbake-layers add-layer meta-marfb'
 
 II. Misc
 ========
 
+This layer contains an image. To generate the mar-image-minimal image,
+run bitbake mar-image-minimal.
+
 --- replace with specific information about the meta-marfb layer ---
+
+III. Quick start guide
+======================
+
+   1. Prepare a Debian Linux machine.
+   
+   2. Install host package.
+   
+      sudo apt install gawk wget git diffstat unzip texinfo gcc build-essential chrpath socat cpio python3 python3-pip python3-pexpect xz-utils debianutils iputils-ping python3-git python3-jinja2 python3-subunit zstd liblz4-tool file locales libacl1
+      sudo locale-gen en_US.UTF-8
+
+   3. Clone poky, meta-raspberrypi, meta-openembedded and switch
+   branch. Clone this repository.
+   
+      git clone git://git.yoctoproject.org/poky
+      cd poky
+      git checkout -t origin/scarthgap -b my-scarthgap
+      git pull
+
+      git clone https://github.com/agherzan/meta-raspberrypi.git -b scarthgap
+      git clone https://github.com/openembedded/meta-openembedded.git -b scarthgap
+
+      git clone https://git.soton.ac.uk/qs2g22/meta-marfb.git
+
+   4. Initialise build environment. This will change working directory
+   to ./build.
+
+      source oe-init-build-env
+
+   5. Add layers.
+
+      bitbake-layers add-layer ../meta-raspberrypi
+      bitbake-layers add-layer ../meta-marfb
+      bitbake-layers add-layer ../meta-openembedded/meta-oe
+      bitbake-layers add-layer ../meta-openembedded/meta-python
+      bitbake-layers add-layer ../meta-openembedded/meta-networking
+
+   6. Edit conf/local.conf. Change the target MACHINE, DISTRO. Set up
+   parallelism.
+
+   NOTE: BY ADDING THE LICENSE FLAG "synaptics-killswitch", YOU AGREE
+         TO THEIR COPYRIGHT LICENSE AND ACCPET THE RISK OF LEGAL
+         ISSUES. REFER TO meta-raspberrypi FOR MORE INFORMATION:
+         <https://meta-raspberrypi.readthedocs.io/en/latest/ipcompliance.html#linux-firmware-rpidistro>.
+
+      39c39,40
+      < MACHINE ??= "qemux86-64"
+      ---
+      > #MACHINE ??= "raspberrypi0-wifi"
+      > MACHINE ??= "raspberrypi0-2w-64"
+      94c95
+      < DISTRO ?= "poky"
+      ---
+      > DISTRO ?= "marfb"
+      288c289,295
+      < CONF_VERSION = "2"
+      ---
+      > CONF_VERSION = "1"
+      > 
+      > 
+      > LICENSE_FLAGS_ACCEPTED = "synaptics-killswitch"
+      > 
+      > BB_NUMBER_THREADS = "8"
+      > PARALLEL_MAKE = "-j 8"
+
+   7. Build. This may take some time for the first time.
+
+      bitbake mar-image-minimal
+
+   8. Flash. The following symlink is the compressed disk image. Use
+   your favourite tool or command (e.g. dd) to flash the image.
+
+      <tmp or tmp-glibc>/deploy/images/<machine>/mar-image-minimal-<machine>.rootfs.wic.bz2
+
