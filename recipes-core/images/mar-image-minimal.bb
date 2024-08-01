@@ -2,15 +2,11 @@ SUMMARY = "A small image just capable of allowing a device to boot."
 
 IMAGE_INSTALL = "packagegroup-core-boot \
     packagegroup-base-extended \
-    zeromq \
     python3 \
-    python3-pyzmq \
     python3-pyserial \
-    connman \
-    connman-client \
     screen \
-    serial-usb \
     usb-modeswitch \
+    fastinit \
     serial-usb \
     ${CORE_IMAGE_EXTRA_INSTALL}"
 
