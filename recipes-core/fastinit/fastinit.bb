@@ -3,6 +3,8 @@ LICENSE = "CLOSED"
 
 SRC_URI = "file://fastinit.sh" 
 
+DEPENDS = "libgpiod"
+
 S = "${WORKDIR}"
 
 do_install() {

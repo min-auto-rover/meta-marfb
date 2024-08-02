@@ -6,6 +6,8 @@ IMAGE_INSTALL = "packagegroup-core-boot \
     python3-pyserial \
     screen \
     usb-modeswitch \
+    libgpiod \
+    libgpiod-tools \
     fastinit \
     serial-usb \
     ${CORE_IMAGE_EXTRA_INSTALL}"

@@ -25,10 +25,12 @@ level_one() {
 	mount -t sysfs sysfs /sys
 	mount -o ro /dev/mmcblk0p1 /boot
 
+	log_to_kernel "setting gpio 23 to high"
+	/usr/bin/gpioset -c 0 23=1 &
+
 	log_to_kernel "getting teletypes on ttyS0"
 	/sbin/getty -L 115200 ttyS0 vt100
 }
-
 level_five() {
 	exec /sbin/init 5
 }
@@ -51,6 +53,7 @@ else
 			;;
 		1)
 			log_to_kernel "entering runlevel 1 (minimal)"
+			log_to_kernel "runlevel 1: tty, serial, gpio"
 			level_one
 			;;
 		5)
