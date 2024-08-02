@@ -1,0 +1,79 @@
+.TH FASTINIT 8 "August 2024" "Version 0.1" "System Administration"
+.SH NAME
+fastinit.sh \- fast system initialisation
+.SH SYNOPSIS
+.B /usr/sbin/fastinit.sh
+\fIrunlevel\fP
+.SH DESCRIPTION
+.B fastinit
+is the parent of all processes on the system. The boot process can be faster if
+.B fastinit
+has PID 1 during the booting of the system.
+
+The behaviour of 
+.B fastinit
+can be controlled using runlevels.
+
+To run
+.B fastinit
+as the first process (PID 1), edit the kernel command-line 
+.BR /bootfs/cmdline.txt
+and append the following line. Note that this file contains only one single line separated by spaces. It is suggested that this file is edited in another system, as errors in command-line may cause kernel panic and stop the system from booting.
+
+.in +4
+.nf
+.B init=/usr/sbin/fastinit.sh \fIrunlevel\fP
+.fi
+.in
+
+.SH RUNLEVEL
+.B fastinit
+supports several runlevels, which represent different states of the system. These include:
+
+.TP
+.B 0
+Halt the system. Invokes
+.B /sbin/poweroff -f
+
+.TP
+.B 1
+Single-user mode. Supports serial, teletypes, proc, sysfs, GPIO. Bootfs is read-only. GPIO 23 (Pin 16) is set to high when boot is completed.
+
+.TP
+.B 5
+SysVinit runlevel 5. Invokes
+.B /sbin/init 5
+
+.TP
+.B 6
+Reboot the system. Invokes
+.B /sbin/reboot -f
+
+
+.SH SIGNALS
+.B fastinit
+responds to a number of signals:
+
+.TP
+.BR SIGHUP "(1)"
+Reboot.
+.TP
+.BR SIGINT "(2)"
+Reboot.
+.TP
+.BR SIGTERM "(15)"
+Poweroff.
+
+
+.SH SEE ALSO
+.BR init (8),
+.BR poweroff (8),
+.BR reboot (8),
+.BR busybox (1),
+.BR mount (8)
+
+
+.SH AUTHOR
+The 
+.B fastinit
+script was first written by Qiyang Sun <qs2g22@soton.ac.uk>, and is maintained by the MAR24 project maintainers.
