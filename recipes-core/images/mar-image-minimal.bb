@@ -10,6 +10,7 @@ IMAGE_INSTALL = "packagegroup-core-boot \
     libgpiod-tools \
     fastinit \
     serial-usb \
+    opencv \
     ${CORE_IMAGE_EXTRA_INSTALL}"
 
 COMPATIBLE_MACHINE = "^rpi$"
