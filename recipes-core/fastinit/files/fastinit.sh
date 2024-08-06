@@ -28,6 +28,8 @@ level_one() {
 	log_to_kernel "setting gpio 23 to high"
 	/usr/bin/gpioset -c 0 23=1 &
 
+	crit_to_kernel "host is up and ready"
+	
 	log_to_kernel "getting teletypes on ttyS0"
 	/sbin/getty -L 115200 ttyS0 vt100
 }
@@ -71,6 +73,5 @@ else
 	esac
 fi
 
-crit_to_kernel "host is up and ready"
-
-exit 0
+# fastinit has nothing to do when exiting a runlevel, halt
+exec /sbin/poweroff -f
