@@ -19,20 +19,48 @@ level_zero() {
 	exec /sbin/poweroff -f
 }
 
-level_one() {
+mountfs() {
 	log_to_kernel "mounting filesystems"
 	mount -t proc proc /proc
 	mount -t sysfs sysfs /sys
 	mount -o ro /dev/mmcblk0p1 /boot
+}
 
+gp23hi() {
 	log_to_kernel "setting gpio 23 to high"
 	/usr/bin/gpioset -c 0 23=1 &
+}
 
+level_one() {
+	mountfs
+	gp23hi
+	crit_to_kernel "host is up and ready"
+	log_to_kernel "getting teletypes on ttyS0"
+	/sbin/getty -L 115200 ttyS0 vt100
+}
+
+level_two() {
+	mountfs
+	gp23hi
+
+	log_to_kernel "adding modules to linux kernel"
+	log_to_kernel "to be added: bcm2835-codec, bcm2835-isp, bcm2835-v4l2, bcm2835-unicam, ov5647, i2c-mux-pinctrl, i2c-bcm2835, uio, fixed"
+	modprobe bcm2835-codec # minors 0-4
+	modprobe bcm2835-isp # minors 5-12
+	modprobe bcm2835-v4l2
+	modprobe bcm2835-unicam # cause red led flash
+	modprobe ov5647
+	modprobe i2c-mux-pinctrl
+	modprobe i2c-bcm2835
+	modprobe uio
+	modprobe fixed
+	
 	crit_to_kernel "host is up and ready"
 	
 	log_to_kernel "getting teletypes on ttyS0"
 	/sbin/getty -L 115200 ttyS0 vt100
 }
+
 level_five() {
 	exec /sbin/init 5
 }
@@ -57,6 +85,11 @@ else
 			log_to_kernel "entering runlevel 1 (minimal)"
 			log_to_kernel "runlevel 1: tty, serial, gpio"
 			level_one
+			;;
+		2)
+			log_to_kernel "entering runlevel 2 (camera)"
+			log_to_kernel "runlevel 2: tty, serial, gpio, camera"
+			level_two
 			;;
 		5)
 			log_to_kernel "entering runlevel 5 (sysvinit)"
