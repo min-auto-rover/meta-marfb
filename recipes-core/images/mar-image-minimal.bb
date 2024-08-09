@@ -10,6 +10,9 @@ IMAGE_INSTALL = "packagegroup-core-boot \
     libgpiod-tools \
     fastinit \
     serial-usb \
+    v4l-utils \
+    libv4l \
+    media-ctl \
     opencv \
     ${CORE_IMAGE_EXTRA_INSTALL}"
 
