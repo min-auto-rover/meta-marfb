@@ -26,6 +26,11 @@ mountfs() {
 	mount -o ro /dev/mmcblk0p1 /boot
 }
 
+rwrootfs() {
+	log_to_kernel "remounting r/w root filesystems"
+	mount -o rw,remount /
+}
+
 gp23hi() {
 	log_to_kernel "setting gpio 23 to high"
 	/usr/bin/gpioset -c 0 23=1 &
@@ -41,8 +46,7 @@ level_one() {
 
 level_two() {
 	mountfs
-	gp23hi
-
+	rwrootfs
 	log_to_kernel "adding modules to linux kernel"
 	log_to_kernel "to be added: bcm2835-codec, bcm2835-isp, bcm2835-v4l2, bcm2835-unicam, ov5647, i2c-mux-pinctrl, i2c-bcm2835, uio, fixed"
 	modprobe bcm2835-codec # minors 0-4
@@ -54,9 +58,10 @@ level_two() {
 	modprobe i2c-bcm2835
 	modprobe uio
 	modprobe fixed
-	
+	udevd --daemon
+	udevadm trigger
+	gp23hi
 	crit_to_kernel "host is up and ready"
-	
 	log_to_kernel "getting teletypes on ttyS0"
 	/sbin/getty -L 115200 ttyS0 vt100
 }
