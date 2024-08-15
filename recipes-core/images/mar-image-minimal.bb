@@ -1,4 +1,4 @@
-SUMMARY = "A small image just capable of allowing a device to boot."
+SUMMARY = "An image just capable of the MAR project."
 
 IMAGE_INSTALL = "packagegroup-core-boot \
     packagegroup-base-extended \
@@ -14,6 +14,16 @@ IMAGE_INSTALL = "packagegroup-core-boot \
     libv4l \
     media-ctl \
     opencv \
+    ffmpeg \
+    libcamera \
+    libcamera-dev \
+    libcamera-apps \
+    gstreamer1.0 \
+    gstreamer1.0-plugins-base \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-plugins-ugly \
+    gstreamer1.0-plugins-good-rpicamsrc \
     ${CORE_IMAGE_EXTRA_INSTALL}"
 
 COMPATIBLE_MACHINE = "^rpi$"
