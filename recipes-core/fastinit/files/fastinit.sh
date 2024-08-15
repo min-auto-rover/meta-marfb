@@ -77,9 +77,12 @@ level_six() {
 runlevel=$1
 
 if [ -z "$runlevel" ]; then
-	warn_to_kernel "cannot read runlevel from argument"
+	crit_to_kernel "cannot read runlevel from argument"
 	warn_to_kernel "please edit cmdline.txt in bootfs"
 	warn_to_kernel "usage: init=/usr/sbin/fastinit RUNLEVEL"
+	crit_to_kernel "triggering kernel panic (c) using sysrq"
+	mount -t proc proc /proc
+	echo c > /proc/sysrq-trigger
 else
 	case $runlevel in
 		0)
@@ -105,8 +108,11 @@ else
 			level_six
 			;;
 		*)
-			warn_to_kernel "Runlevel $runlevel not implemented"
+			crit_to_kernel "Runlevel $runlevel not implemented"
 			warn_to_kernel "usage: /usr/sbin/fastinit RUNLEVEL"
+			crit_to_kernel "triggering kernel panic (c) using sysrq"
+			mount -t proc proc /proc
+			echo c > /proc/sysrq-trigger
 			;;
 	esac
 fi
