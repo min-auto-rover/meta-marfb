@@ -83,6 +83,10 @@ III. Quick start guide
       bitbake-layers add-layer ../meta-openembedded/meta-oe
       bitbake-layers add-layer ../meta-openembedded/meta-python
       bitbake-layers add-layer ../meta-openembedded/meta-networking
+      bitbake-layers add-layer ../meta-openembedded/meta-multimedia
+
+      Assign a higher priority for layer meta-marfb than
+      meta-raspberrypi and meta-openembedded.
 
    6. Edit conf/local.conf. Change the target MACHINE, DISTRO. Set up
    parallelism.
