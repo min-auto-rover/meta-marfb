@@ -16,13 +16,11 @@ PE = "1"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "python3-pyyaml-native python3-jinja2-native python3-ply-native python3-jinja2-native udev gnutls chrpath-native libevent libyaml"
+DEPENDS = "python3-pyyaml-native python3-jinja2-native python3-ply-native python3-jinja2-native udev gnutls chrpath-native libevent libyaml glib-2.0 gstreamer1.0 gstreamer1.0-plugins-bad gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'qt', 'qtbase qtbase-native', '', d)}"
 
-PACKAGES =+ "${PN}-gst"
-
-PACKAGECONFIG ??= ""
-PACKAGECONFIG[gst] = "-Dgstreamer=enabled,-Dgstreamer=disabled,gstreamer1.0 gstreamer1.0-plugins-base"
+PACKAGECONFIG ?= ""
+PACKAGECONFIG ??= "-Dgstreamer=enabled,-Dgstreamer=disabled,gstreamer1.0 gstreamer1.0-plugins-base"
 
 LIBCAMERA_PIPELINES ??= "auto"
 
@@ -33,6 +31,7 @@ EXTRA_OEMESON = " \
     -Dlc-compliance=disabled \
     -Dtest=false \
     -Ddocumentation=disabled \
+    -Dgstreamer=enabled \
 "
 
 RDEPENDS:${PN} = "${@bb.utils.contains('DISTRO_FEATURES', 'wayland qt', 'qtwayland', '', d)}"
@@ -64,9 +63,13 @@ do_package_recalculate_ipa_signatures() {
     ${S}/src/ipa/ipa-sign-install.sh ${B}/src/ipa-priv-key.pem "${modules}"
 }
 
-FILES:${PN} += " ${libexecdir}/libcamera/v4l2-compat.so"
-FILES:${PN}-gst = "${libdir}/gstreamer-1.0"
+FILES:${PN} += " \
+    ${libexecdir}/libcamera/v4l2-compat.so \
+    ${libdir}/gstreamer-1.0 \
+"
 
 # libcamera-v4l2 explicitly sets _FILE_OFFSET_BITS=32 to get access to
 # both 32 and 64 bit file APIs.
 GLIBC_64BIT_TIME_FLAGS = ""
+
+INSANE_SKIP =+ "32bit-time"
