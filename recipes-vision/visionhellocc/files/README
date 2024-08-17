@@ -1,0 +1,31 @@
+                    =============
+                    VISIONHELLOCC
+                    =============
+
+The hello world program for OpenCV written in C++
+
+This program is part of meta-marfb layer -- The MAR fastboot
+Linux. Licensed under GNU GPL-3.0-or-later.
+
+This program is part of the MAR24 project.
+
+-------------
+GNU AUTOTOOLS
+-------------
+
+To use Autotools to build, first source the SDK or eSDK
+environment. Then, run the following commands to cross-compile.
+
+$ autoreconf
+$ ./configure --host=arm-oe-linux-gnueabi
+$ make
+
+To install to ./tmp on host, run:
+
+$ make install DESTDIR=./tmp
+
+To prepare tarball for bitbake, run:
+
+$ make dist
+
+Refer to GNU Autotools Manual for Autotools usage.

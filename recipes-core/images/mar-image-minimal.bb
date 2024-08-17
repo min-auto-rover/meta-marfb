@@ -14,6 +14,19 @@ IMAGE_INSTALL = "packagegroup-core-boot \
     libv4l \
     media-ctl \
     opencv \
+    opencv-dev \
+    libopencv-aruco \
+    libopencv-aruco-dev \
+    libopencv-core \
+    libopencv-core-dev \
+    libopencv-imgcodecs \
+    libopencv-imgcodecs-dev \
+    libopencv-imgproc \
+    libopencv-imgproc-dev \
+    libopencv-video \
+    libopencv-video-dev \
+    libopencv-videoio \
+    libopencv-videoio-dev \
     ffmpeg \
     libcamera \
     libcamera-dev \
@@ -24,6 +37,7 @@ IMAGE_INSTALL = "packagegroup-core-boot \
     gstreamer1.0-plugins-bad \
     gstreamer1.0-plugins-ugly \
     gstreamer1.0-plugins-good-rpicamsrc \
+    visionhellocc \
     ${CORE_IMAGE_EXTRA_INSTALL}"
 
 COMPATIBLE_MACHINE = "^rpi$"
