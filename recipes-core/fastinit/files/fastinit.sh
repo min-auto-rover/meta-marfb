@@ -24,6 +24,8 @@ mountfs() {
 	mount -t proc proc /proc
 	mount -t sysfs sysfs /sys
 	mount -o ro /dev/mmcblk0p1 /boot
+	mount -t tmpfs -o size=100M tmpfs /var/volatile/log
+	mount -t tmpfs -o size=100M tmpfs /var/log
 }
 
 rwrootfs() {
@@ -66,6 +68,48 @@ level_two() {
 	/sbin/getty -L 115200 ttyS0 vt100
 }
 
+level_three() {
+	mountfs
+	rwrootfs
+	log_to_kernel "adding modules to linux kernel"
+	log_to_kernel "to be added: bcm2835-codec, bcm2835-isp, bcm2835-v4l2, bcm2835-unicam, ov5647, i2c-mux-pinctrl, i2c-bcm2835, uio, fixed, brcmfmac" 
+	modprobe bcm2835-codec # minors 0-4
+	modprobe bcm2835-isp # minors 5-12
+	modprobe bcm2835-v4l2
+	modprobe bcm2835-unicam # cause red led flash
+	modprobe ov5647
+	modprobe i2c-mux-pinctrl
+	modprobe i2c-bcm2835
+	modprobe uio
+	modprobe fixed
+	modprobe brcmfmac
+	udevd --daemon
+	udevadm trigger
+	log_to_kernel "setting up lo (127.0.0.1/8)"
+	ip addr add 127.0.0.1/8 dev lo
+	ip link set lo up
+	log_to_kernel "setting up wlan0 (192.168.1.1)"
+	ifconfig wlan0 down
+	ifconfig wlan0 192.168.1.1
+	ifconfig wlan0 up
+	log_to_kernel "starting hostapd"
+	hostapd /etc/hostapd.conf -B 1>&2
+	log_to_kernel "starting dnsmasq"
+	dnsmasq 1>&2
+	log_to_kernel "starting fcgiwrap"
+	fcgiwrap -s unix:/var/run/fcgiwrap.socket &
+	log_to_kernel "starting nginx"
+	mkdir -p /var/volatile/log
+	mkdir -p /var/log/nginx
+	mkdir -p /usr/logs
+	mkdir -p /run/nginx
+	nginx 1>&2
+	gp23hi
+	crit_to_kernel "host is up and ready"
+	log_to_kernel "getting teletypes on ttyS0"
+	/sbin/getty -L 115200 ttyS0 vt100
+}
+
 level_five() {
 	exec /sbin/init 5
 }
@@ -98,6 +142,11 @@ else
 			log_to_kernel "entering runlevel 2 (camera)"
 			log_to_kernel "runlevel 2: tty, serial, gpio, camera"
 			level_two
+			;;
+		3)
+			log_to_kernel "entering runlevel 3 (network)"
+			log_to_kernel "runlevel 3: tty, serial, gpio, camera, network, hostap"
+			level_three
 			;;
 		5)
 			log_to_kernel "entering runlevel 5 (sysvinit)"

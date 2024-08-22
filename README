@@ -84,6 +84,7 @@ III. Quick start guide
       bitbake-layers add-layer ../meta-openembedded/meta-python
       bitbake-layers add-layer ../meta-openembedded/meta-networking
       bitbake-layers add-layer ../meta-openembedded/meta-multimedia
+      bitbake-layers add-layer ../meta-openembedded/meta-webserver
 
       Assign a higher priority for layer meta-marfb than
       meta-raspberrypi and meta-openembedded.

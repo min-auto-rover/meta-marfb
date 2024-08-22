@@ -1,0 +1,26 @@
+#+TITLE: Camera Capture Control
+#+SETUPFILE: ./orgsetup
+
+* Manual
+
+1. Click "Capture", will navigate to CGI
+2. Wait and navigate back when prompted
+3. When you are back to this page again, the view should be updated
+4. If not, force refresh this page
+
+* Control
+
+[[http://192.168.1.1/cgi-bin/camcap.cgi][Capture]] or manually visit /cgi-bin/camcap.cgi
+
+#+BEGIN_EXPORT html
+<p><a href="javascript:location.reload()">Reload</a> if your browser ignores no-cache header</p>
+#+END_EXPORT
+
+#+BEGIN_EXPORT html
+<p><a href="http://192.168.1.1/camctrl/cap.jpg">Open Image</a> instead of viewing below</p>
+#+END_EXPORT
+
+* View
+
+#+ATTR_HTML: :width 80%
+[[http://192.168.1.1/camctrl/cap.jpg]]

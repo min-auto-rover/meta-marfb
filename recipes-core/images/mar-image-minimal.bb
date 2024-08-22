@@ -38,6 +38,10 @@ IMAGE_INSTALL = "packagegroup-core-boot \
     gstreamer1.0-plugins-ugly \
     gstreamer1.0-plugins-good-rpicamsrc \
     visionhellocc \
+    hostapd \
+    dnsmasq \
+    nginx \
+    fcgiwrap \
     ${CORE_IMAGE_EXTRA_INSTALL}"
 
 COMPATIBLE_MACHINE = "^rpi$"

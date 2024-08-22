@@ -1,0 +1,4 @@
+#+HTML_HEAD: <style type="text/css"> html { color-scheme: light dark; } body { width: 35em; margin: 0 auto; font-family: Tahoma, Verdana, Arial, sans-serif; } a { padding: 0px 1em; border: 3px outset buttonborder; border-radius: 3px; color: buttontext; background-color: buttonface; text-decoration: none; } </style> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+#+OPTIONS: ^:nil <:t num:nil toc:nil
+#+AUTHOR: Qiyang Sun
+#+EMAIL: qs2g22@soton.ac.uk 
