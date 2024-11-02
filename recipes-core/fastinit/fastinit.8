@@ -1,4 +1,4 @@
-.TH FASTINIT 8 "August 2024" "Version 0.1" "System Administration"
+.TH FASTINIT 8 "August 2024" "Version 0.1" "System Administration Manual"
 .SH NAME
 fastinit.sh \- fast system initialisation
 .SH SYNOPSIS
@@ -26,6 +26,8 @@ and append the following line. Note that this file contains only one single line
 .fi
 .in
 
+NEVER SET RUNLEVEL TO 0 OR 6 FROM THE KERNEL COMMAND LINE.
+
 .SH RUNLEVEL
 .B fastinit
 supports several runlevels, which represent different states of the system. These include:
@@ -38,6 +40,18 @@ Halt the system. Invokes
 .TP
 .B 1
 Single-user mode. Supports serial, teletypes, proc, sysfs, GPIO. Bootfs is read-only. GPIO 23 (Pin 16) is set to high when boot is completed.
+
+.TP
+.B 2
+Single-user mode with camera. Support runlevel 1 and camera. System is quiet (only kernel panic should be printed). Udev daemon is started. Level3d daemon is started, see also
+.B level3d
+(8). Marvision is started. Bootfs is readonly. GPIO 23 (Pin 16) is set to high when boot is completed. No teletype or login support.
+
+The following kernel modules are started to make the camera work: bcm2835-codec, bcm2835-isp, bcm2835-v4l2, bcm2835-unicam, ov5647, i2c-mux-pinctrl, i2c-bcm2835, uio, fixed.
+
+.TP
+.B 3
+Single-user mode with camera and networking. Support runlevel 2 and camera. Udev daemon is started. Bootfs is readonly. GPIO 23 (Pin 16) is set to high when boot is completed. Network interface local loopback (lo) is configured (inet=127.0.0.1, mask=255.0.0.0). Network interface wlan0 is configured (inet=192.168.1.1, bcast=192.168.1.255, mask=255.255.255.0). Hostapd daemon (AP support) is started. Dnsmasq daemon (DNS and DHCP support) is started. Fcgiwrap daemon (Fast CGI for nginx) is started. Nginx (HTTP support) is started. Message of the day is printed.
 
 .TP
 .B 5
@@ -65,12 +79,26 @@ Reboot.
 Poweroff.
 
 
+.SH BUGS
+
+Bugs may be reported to <qs2g22@soton.ac.uk>.
+
+.IP \[bu]
+System will always halt if runlevel is set to 1 in kernel command line.
+.IP \[bu]
+System will always reboot if runlevel is set to 6 in kernel command line.
+.IP \[bu]
+Fastinit might print unwanted messages in runlevel 2.
+
 .SH SEE ALSO
 .BR init (8),
 .BR poweroff (8),
 .BR reboot (8),
 .BR busybox (1),
-.BR mount (8)
+.BR mount (8),
+.BR chlevel (1),
+.BR level3d (8),
+.BR print_motd (1)
 
 
 .SH AUTHOR
