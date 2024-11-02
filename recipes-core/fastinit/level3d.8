@@ -1,0 +1,18 @@
+.TH LEVEL3D 8 "November 2024" "Version 0.1" "System Administration Commands and Daemon Manual"
+.SH NAME
+level3d.sh \- runlevel 3 daemon
+.SH SYNOPSIS
+.B /usr/sbin/level3d.sh &
+
+.SH DESCRIPTION
+
+Level3d.sh is blocked until GPIO 24 is high, and invoke /sbin/chlevel.sh 3.
+
+.SH SEE ALSO
+.BR chlevel (1),
+.BR fastinit (8),
+
+.SH AUTHOR
+The 
+.B level3d
+script was first written by Qiyang Sun <qs2g22@soton.ac.uk>, and is maintained by the MAR24 project maintainers.
