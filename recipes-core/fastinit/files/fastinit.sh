@@ -20,16 +20,14 @@ level_zero() {
 }
 
 mountfs() {
-	log_to_kernel "mounting filesystems"
 	mount -t proc proc /proc
 	mount -t sysfs sysfs /sys
 	mount -o ro /dev/mmcblk0p1 /boot
-	mount -t tmpfs -o size=100M tmpfs /var/volatile/log
-	mount -t tmpfs -o size=100M tmpfs /var/log
+	#mount -t tmpfs -o size=100M tmpfs /var/volatile/log
+	#mount -t tmpfs -o size=100M tmpfs /var/log
 }
 
 rwrootfs() {
-	log_to_kernel "remounting r/w root filesystems"
 	mount -o rw,remount /
 }
 
@@ -39,6 +37,7 @@ gp23hi() {
 }
 
 level_one() {
+	log_to_kernel "mounting filesystems"
 	mountfs
 	gp23hi
 	crit_to_kernel "host is up and ready"
@@ -49,8 +48,6 @@ level_one() {
 level_two() {
 	mountfs
 	rwrootfs
-	log_to_kernel "adding modules to linux kernel"
-	log_to_kernel "to be added: bcm2835-codec, bcm2835-isp, bcm2835-v4l2, bcm2835-unicam, ov5647, i2c-mux-pinctrl, i2c-bcm2835, uio, fixed"
 	modprobe bcm2835-codec # minors 0-4
 	modprobe bcm2835-isp # minors 5-12
 	modprobe bcm2835-v4l2
@@ -63,13 +60,17 @@ level_two() {
 	udevd --daemon
 	udevadm trigger
 	gp23hi
-	crit_to_kernel "host is up and ready"
-	log_to_kernel "getting teletypes on ttyS0"
-	/sbin/getty -L 115200 ttyS0 vt100
+	/sbin/level3d.sh &
+	/usr/bin/marvision 1>/dev/null 2>/dev/null
+	# To avoid undefined behaviours when marvision exited abnormally,
+	# reboot the system. 
+	reboot -f
 }
 
 level_three() {
+	log_to_kernel "mounting filesystems"
 	mountfs
+	log_to_kernel "remounting r/w root filesystems"
 	rwrootfs
 	log_to_kernel "adding modules to linux kernel"
 	log_to_kernel "to be added: bcm2835-codec, bcm2835-isp, bcm2835-v4l2, bcm2835-unicam, ov5647, i2c-mux-pinctrl, i2c-bcm2835, uio, fixed, brcmfmac" 
@@ -107,6 +108,7 @@ level_three() {
 	gp23hi
 	crit_to_kernel "host is up and ready"
 	log_to_kernel "getting teletypes on ttyS0"
+	/sbin/print_motd.sh
 	/sbin/getty -L 115200 ttyS0 vt100
 }
 
@@ -139,8 +141,6 @@ else
 			level_one
 			;;
 		2)
-			log_to_kernel "entering runlevel 2 (camera)"
-			log_to_kernel "runlevel 2: tty, serial, gpio, camera"
 			level_two
 			;;
 		3)
