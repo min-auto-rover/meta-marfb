@@ -62,9 +62,7 @@ level_two() {
 	gp23hi
 	/sbin/level3d.sh &
 	/usr/bin/marvision 1>/dev/null 2>/dev/null
-	# To avoid undefined behaviours when marvision exited abnormally,
-	# reboot the system. 
-	reboot -f
+	wait $!
 }
 
 level_three() {
