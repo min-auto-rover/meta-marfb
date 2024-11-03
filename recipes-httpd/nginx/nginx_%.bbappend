@@ -13,7 +13,9 @@ SRCREV_FORMAT = "sha256"
 
 SRC_URI += "file://html/landing.html"
 SRC_URI += "file://html/camctrl.html"
+SRC_URI += "file://html/chlevel2.html"
 SRC_URI += "file://cgi-bin/camcap.cgi"
+SRC_URI += "file://cgi-bin/chlevel2.cgi"
 
 EXTRA_OECONF:append = " --add-module=../nginx-rtmp-module --add-module=../nginx-exec"
 
@@ -55,6 +57,12 @@ do_install:append() {
     install -m 0777 -d ${D}/var/www/localhost/html/camctrl
     cp ${WORKDIR}/html/camctrl.html ${D}/var/www/localhost/html/camctrl/index.html
     cp ${WORKDIR}/cgi-bin/camcap.cgi ${D}/var/www/localhost/html/cgi-bin/camcap.cgi
+    
+    # install change level 2
+    install -m 0777 -d ${D}/var/www/localhost/html/chlevel2
+    cp ${WORKDIR}/html/chlevel2.html ${D}/var/www/localhost/html/chlevel2/index.html
+    cp ${WORKDIR}/cgi-bin/chlevel2.cgi ${D}/var/www/localhost/html/cgi-bin/chlevel2.cgi
+
 }
 
 FILES:${PN} += "/usr/local/ /usr/local/nginx/ /usr/local/nginx/* /var/www/localhost/html/video-js/"

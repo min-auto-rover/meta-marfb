@@ -1,0 +1,6 @@
+#+TITLE: Change Runlevel
+#+SETUPFILE: ./orgsetup
+
+* Control
+
+[[http://192.168.1.1/cgi-bin/chlevel2.cgi][Change Runlevel To 2]] or manually visit /cgi-bin/chlevel2.cgi
