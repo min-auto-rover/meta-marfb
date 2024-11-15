@@ -42,6 +42,8 @@ IMAGE_INSTALL = "packagegroup-core-boot \
     dnsmasq \
     nginx \
     fcgiwrap \
+    marvision \
+    marvision-dbg \
     ${CORE_IMAGE_EXTRA_INSTALL}"
 
 COMPATIBLE_MACHINE = "^rpi$"
@@ -49,6 +51,9 @@ COMPATIBLE_MACHINE = "^rpi$"
 LICENSE = "MIT"
 
 inherit core-image
+
+EXTRA_IMAGE_FEATURES:append = " tools-debug"
+DEBUG_BUILD = "1"
 
 IMAGE_ROOTFS_SIZE ?= "8192"
 
